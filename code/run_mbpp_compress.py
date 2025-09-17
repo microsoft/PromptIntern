@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 import requests 
 from time import sleep
 from requests.exceptions import Timeout

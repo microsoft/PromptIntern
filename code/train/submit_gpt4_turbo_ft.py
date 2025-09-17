@@ -1,4 +1,6 @@
-# NOTE: Fill in the variables before running the script
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 SUBSCRIPTION_ID = "" # Subscription ID of the Azure subscription to use
 RESOURCE_GROUP = "" # Resource group of the Azure ML workspace
 WORKSPACE_NAME = "" # Name of the Azure ML workspace
