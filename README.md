@@ -69,6 +69,14 @@ We evaluate on **NL2Code benchmarks**:
 - NL2F
 - NL2Bash
 
+Generated Python is evaluated in an isolated Docker container. Build the runner image before starting an MBPP run:
+
+```bash
+docker build -t promptintern-python-runner:latest code/utils/sandbox
+```
+
+The evaluator runs the image without network access or host mounts and applies CPU, memory, process, output, and time limits. Set `PROMPTINTERN_RUNNER_IMAGE` to use a separately managed or digest-pinned runner image.
+
 We provide an example on the MBPP compression, other benchmarks can follow the same implementation here.
 ```bash
 cd code

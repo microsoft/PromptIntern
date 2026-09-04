@@ -5,50 +5,11 @@ import requests
 from time import sleep
 from requests.exceptions import Timeout
 import json 
-import re
-import traceback
 from tqdm import tqdm
 import os
+from utils.eval_python import eval_python
 
 sleep_time= 0
-def eval_python(code, testcase):
-    local_var = {}
-    exit_code = None
-    try:
-        function = ''
-        if "```python" in code:
-            function = code.split("```python")[1].split("```")[0] if "```" in code else code.strip(".")
-        else:
-            function = code.split("python```")[1].split("```")[0] if "```" in code else code.strip(".")
-        function = function + "\n" + testcase
-
-        import_lib = [i for i in function.split("\n") if i.startswith("import ") or i.startswith("from ")]
-        LIBVAR = locals()
-        exec("\n".join(import_lib), globals(), LIBVAR)
-        GLOBALVAR = globals()
-        GLOBALVAR.update(LIBVAR)
-
-        exec("\n".join([function]), GLOBALVAR, local_var)
-        exit_code = 0
-        return {"exit_code": exit_code,"function": function, "input": testcase,"output":local_var["result"]}
-    except KeyError as e:
-        if str(e) == "'result'":
-            exit_code = 0
-            return {"exit_code": exit_code,"function": function,"input": testcase,"output":'<The test case does not return an output>'}
-    except:
-        exc_info=traceback.format_exc()
-        error_line = None
-        if "File \"<string>\"," in exc_info:
-            pattern = r'File "<string>", line (\d+)'  
-            match = re.search(pattern, exc_info)  
-            
-            if match:  
-                line_number = match.group(1)  
-                error_line=function.split("\n")[int(line_number)-1]
-
-
-        exit_code = 1
-        return {"exit_code": exit_code,"function": function,"input": testcase, 'output': None, "error":exc_info.strip().splitlines()[-1], "error_line": error_line}
 
 def run_llm_direct(model_name,model,messages,temperature=0,max_tokens=3200,top_p=0.95,frequency_penalty=0.0,presence_penalty=0.0,stop=None,n=1):
     if model=="gpt-4":
